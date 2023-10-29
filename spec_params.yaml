@@ -1,0 +1,16 @@
+best_params_max_iter_200:
+  C: 0.07714050926244878
+  class_weight: 7
+  gamma: 6.634948905089997e-05
+  kernel: linear
+  max_iter: 200
+  probability: 1
+  shrinking: 0
+best_params_max_iter_500:
+  C: 0.060195753250088926
+  class_weight: 7
+  gamma: 1.7521378298043464
+  kernel: linear
+  max_iter: 500
+  probability: 0
+  shrinking: 1

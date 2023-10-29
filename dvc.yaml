@@ -1,0 +1,19 @@
+stages:
+  preprocess:
+    cmd: python cli/preprocessing.py
+    deps:
+      - datasets/bank.csv
+    outs:
+      - datasets/prepared_data.csv
+  first_train:
+    cmd: python cli/train.py ${{read_yaml(".spec_params.yaml")['learning_rate']}}
+    deps:
+      - data/processed/processed_data.csv
+    outs:
+      - models/model.pklGIT
+  second_train:
+    cmd: python cli/train.py --max_iter ${{read_yaml("spec_params.yaml")['learning_rate']}}
+    deps:
+      - data/processed/processed_data.csv
+    outs:
+      - models/model.pklGIT

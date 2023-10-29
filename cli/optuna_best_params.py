@@ -1,7 +1,6 @@
 import argparse
 import logging
 import yaml
-import joblib
 import mlflow
 import optuna
 import os
@@ -39,7 +38,6 @@ def objective(trial, **kwargs):
         "shrinking": trial.suggest_int("shrinking", low=0, high=1),
         "class_weight": trial.suggest_int("class_weight", low=2, high=8),
         "probability": trial.suggest_int("probability", low=0, high=1)
-
     }
 
     mlflow.set_experiment(f"my_experiment_maxiter_{max_iter}_{trial.number}")
@@ -88,18 +86,21 @@ best_params = study.best_params
 best_params["max_iter"] = max_iter
 print(best_params)
 
+with open(f'spec_params_{max_iter}_max_iter.yaml', 'w') as f:
+    yaml.dump({f'best_params_max_iter_{max_iter}': best_params}, f)
+
 # save best_params params
 
-if os.path.isfile('spec_params.yaml'):
-
-    with open('spec_params.yaml', 'r') as f:
-        config = yaml.safe_load(f)
-    print(config)
-    if config is None:
-        config = {}
-    config[f'best_params_max_iter_{max_iter}'] = best_params
-else:
-    config = {f'best_params_max_iter_{max_iter}': best_params}
-
-with open('spec_params.yaml', 'w') as f:
-    yaml.dump(config, f)
+# if os.path.isfile('spec_params.yaml'):
+#
+#     with open('spec_params.yaml', 'r') as f:
+#         config = yaml.safe_load(f)
+#     print(config)
+#     if config is None:
+#         config = {}
+#     config[f'best_params_max_iter_{max_iter}'] = best_params
+# else:
+#     config = {f'best_params_max_iter_{max_iter}': best_params}
+#
+# with open(f'spec_params_{max_iter}_max_iter.yaml', 'w') as f:
+#     yaml.dump(config, f)

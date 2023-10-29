@@ -2,6 +2,7 @@ import argparse
 import joblib
 import pandas as pd
 from sklearn import svm
+from sklearn.metrics import classification_report, hinge_loss
 from sklearn.model_selection import train_test_split
 
 parser = argparse.ArgumentParser()
@@ -24,7 +25,7 @@ shrinking = args.shrinking
 
 df = pd.read_csv("datasets/prepared_data.csv")
 labels = list(map(int, df["labels"]))
-df = df.drop(['labels'], axis=10)
+df = df.drop(['labels'], axis=1)
 X_train, X_test, y_train, y_test = train_test_split(df, labels, test_size=0.3, random_state=42)
 
 clf = svm.SVC(C=C,  # размер штрафа за неправильную классификацию
@@ -42,3 +43,10 @@ accuracy = clf.score(X_test, y_test)
 
 joblib.dump(clf, f'models/best_model_{max_iter}_iter.pkl')
 print(accuracy)
+
+accuracy = clf.score(X_test.values, y_test)
+predicts = clf.predict(X_test.values)
+print({"loss": hinge_loss(predicts, y_test), "accuracy": accuracy})
+results = pd.DataFrame({"loss": [hinge_loss(predicts, y_test)], "accuracy": [accuracy]})
+
+results.to_csv(f"./metrics/metrics_max_iter_{max_iter}.csv")

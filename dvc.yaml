@@ -13,15 +13,25 @@ stages:
     cmd: python cli/optuna_best_params.py --max_iter ${train.first_max_iter} --logs ${train.logs}
     deps:
       - datasets/prepared_data.csv
-    #outs:
-    #  - spec_params.yaml
+    outs:
+      - spec_params_${train.first_max_iter}_max_iter.yaml
 
   second_run:
     cmd: python cli/optuna_best_params.py --max_iter ${train.second_max_iter} --logs ${train.logs}
     deps:
       - datasets/prepared_data.csv
-    #outs:
-    #  - spec_params.yaml
+    outs:
+      - spec_params_${train.second_max_iter}_max_iter.yaml
+
+  yaml_merge:
+    cmd: python cli/yaml_merge.py 
+        --first spec_params_${train.first_max_iter}_max_iter.yaml
+        --second spec_params_${train.second_max_iter}_max_iter.yaml
+    deps:
+      - spec_params_${train.first_max_iter}_max_iter.yaml
+      - spec_params_${train.second_max_iter}_max_iter.yaml
+    outs:
+      - spec_params.yaml
 
   train_best_models:
     foreach:
@@ -29,19 +39,13 @@ stages:
       - ${best_params_max_iter_500}
     do:
       cmd:  python cli/train.py ${item}
-#                  --c ${item.C}
-#                  --class_weight ${item.class_weight}
-#                  --gamma ${item.gamma}
-#                  --kernel ${item.kernel}
-#                  --max_iter $
       deps:
         - spec_params.yaml
       outs:
         - models/best_model_${item.max_iter}_iter.pkl
+        - metrics/metrics_max_iter_${item.max_iter}.csv
 
 
-      #echo ${item.class_weight}
-      #   cmd: python cli/train.
 
 
 

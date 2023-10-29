@@ -1,2 +1,4 @@
-first_max_iter: 200
-second_max_iter: 500
+train:
+  first_max_iter: 200
+  second_max_iter: 500
+  logs: True

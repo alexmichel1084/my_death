@@ -1,3 +1,6 @@
+vars:
+  - spec_params.yaml
+
 stages:
   preprocess:
     cmd: python cli/preprocessing.py
@@ -5,15 +8,43 @@ stages:
       - datasets/bank.csv
     outs:
       - datasets/prepared_data.csv
-  first_train:
-    cmd: python cli/train.py ${{read_yaml(".spec_params.yaml")['learning_rate']}}
+
+  first_run:
+    cmd: python cli/optuna_best_params.py --max_iter ${train.first_max_iter} --logs ${train.logs}
     deps:
-      - data/processed/processed_data.csv
-    outs:
-      - models/model.pklGIT
-  second_train:
-    cmd: python cli/train.py --max_iter ${{read_yaml("spec_params.yaml")['learning_rate']}}
+      - datasets/prepared_data.csv
+    #outs:
+    #  - spec_params.yaml
+
+  second_run:
+    cmd: python cli/optuna_best_params.py --max_iter ${train.second_max_iter} --logs ${train.logs}
     deps:
-      - data/processed/processed_data.csv
-    outs:
-      - models/model.pklGIT
+      - datasets/prepared_data.csv
+    #outs:
+    #  - spec_params.yaml
+
+  train_best_models:
+    foreach:
+      - ${best_params_max_iter_200}
+      - ${best_params_max_iter_500}
+    do:
+      cmd:  python cli/train.py ${item}
+#                  --c ${item.C}
+#                  --class_weight ${item.class_weight}
+#                  --gamma ${item.gamma}
+#                  --kernel ${item.kernel}
+#                  --max_iter $
+      deps:
+        - spec_params.yaml
+      outs:
+        - models/best_model_${item.max_iter}_iter.pkl
+
+
+      #echo ${item.class_weight}
+      #   cmd: python cli/train.
+
+
+
+
+
+

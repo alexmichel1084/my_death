@@ -1,6 +1,6 @@
 import polars as pl
 
-df = pl.read_csv("../datasets/bank.csv", separator=';')
+df = pl.read_csv("datasets/bank.csv", separator=';')
 columns = df.columns
 df = df.lazy()
 
@@ -113,7 +113,7 @@ for i, column in enumerate(corr_matrix):
 df.drop(['pdays_normalized'])
 # previous_normalized, pdays_normalized are corelated
 
-df.collect().write_csv("../datasets/prepared_data.csv")
+df.collect().write_csv("datasets/prepared_data.csv")
 
 
 

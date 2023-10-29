@@ -1,2 +1,8 @@
 venv
 .idea
+.dvc
+datasets/bank.csv
+datasets/prepared_data.csv
+models/best_model.pkl
+cli/mlruns
+mlruns

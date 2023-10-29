@@ -5,6 +5,5 @@ datasets/prepared_data.csv
 models/best_model.pkl
 cli/mlruns
 mlruns
-/spec_params.yaml
 /spec_params_200_max_iter.yaml
 /spec_params_500_max_iter.yaml

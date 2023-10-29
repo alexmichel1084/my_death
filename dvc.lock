@@ -4,12 +4,12 @@ stages:
     cmd: python cli/preprocessing.py
     deps:
     - path: datasets/bank.csv
-      md5: b4181b25a18878e996465dd252198556
-      size: 466109
+      md5: 818ae6e0dd67149b8de5b7c79158e6f8
+      size: 466006
     outs:
     - path: datasets/prepared_data.csv
-      md5: d564773770903f03ae0b74c4cb778042
-      size: 1324607
+      md5: 344c9874f970b6d8457c17fdf3c4a99e
+      size: 1339873
   first_train:
     cmd: python cli/train.py --max_iter 200 --logs true
     deps:
@@ -34,22 +34,22 @@ stages:
     cmd: python cli/optuna_best_params.py --max_iter 500 --logs true
     deps:
     - path: datasets/prepared_data.csv
-      md5: d564773770903f03ae0b74c4cb778042
-      size: 1324607
+      md5: 344c9874f970b6d8457c17fdf3c4a99e
+      size: 1339873
     outs:
     - path: spec_params_500_max_iter.yaml
-      md5: b3f73104b2a2a277623b0faba1891ddc
-      size: 171
+      md5: feff471b97221393537d284d44430ab4
+      size: 177
   first_run:
     cmd: python cli/optuna_best_params.py --max_iter 200 --logs true
     deps:
     - path: datasets/prepared_data.csv
-      md5: d564773770903f03ae0b74c4cb778042
-      size: 1324607
+      md5: 344c9874f970b6d8457c17fdf3c4a99e
+      size: 1339873
     outs:
     - path: spec_params_200_max_iter.yaml
-      md5: a9c09002e1134701ec62fd5080f4ecab
-      size: 173
+      md5: a4e7775b52e3041ce10709db7e31183f
+      size: 175
   train_best_models@0:
     cmd: python cli/train.py --C 0.07714050926244878 --class_weight 7 --gamma 6.634948905089997e-05
       --kernel linear --max_iter 200 --probability 1 --shrinking 0
